@@ -2,10 +2,22 @@ import time
 
 produtos_estoque = []
 
+#Cadastra produto 
 def cadastrar_produtos():
-    descricao_produto = input("Descrição do item:")
-    codigo = input("Código do item:")
+    descricao_produto = input("Descrição do item:") 
+    # Verifica se o código já está cadastrado.
     while True:
+            codigo = input("Código do item:")
+            codigo_existe = False
+            for produto in produtos_estoque:
+                if produto["id"] == codigo:
+                    codigo_existe =  True
+            if codigo_existe == True:
+                print("Esse código já está cadastrado.")
+            else:
+                break
+    #Filtra para a quantidade só aceitar números positivos, não aceita negativos, ou por extenso (ex: "cinco").            
+    while True: 
         try:
             quantidade = int(input("Quantidade:"))
             if quantidade < 0:
