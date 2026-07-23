@@ -1,1 +1,5 @@
-print("Sistema de Controle de Estoque")
+print("="*3, "CONTROLE DE ESTOQUE", "="*3)
+print("\n1. Cadastrar produto")
+print("2. Listar produtos")
+print("3. Sair\n")
+print("="*28)
