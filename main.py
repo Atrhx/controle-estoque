@@ -1,6 +1,19 @@
 import time
+import json
 
-produtos_estoque = []
+def carregar_estoque():
+    try:
+        with open("estoque.json", "r", encoding="utf-8") as arquivo:
+            return json.load(arquivo)
+    except FileNotFoundError:
+        return []
+
+produtos_estoque = carregar_estoque()
+
+#Salvar arquivos em JSON
+def salvar_estoque():
+    with open("estoque.json", "w", encoding="utf-8") as arquivo:
+        json.dump(produtos_estoque, arquivo, indent=4, ensure_ascii=False)
 
 #Cadastra produto 
 def cadastrar_produtos():
@@ -48,9 +61,10 @@ while True:
     elif acao == "2":
         listar_produtos()
     elif acao == "3":
-        print("Encerrando o programa...")
+        salvar_estoque()
         print("Salvando os produtos")
         time.sleep(5)
+        print("Encerrando o programa...")
         break
     else:
         print("Opção inválida.")
