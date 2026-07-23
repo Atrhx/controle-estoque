@@ -19,16 +19,20 @@ def salvar_estoque():
 def cadastrar_produtos():
     descricao_produto = input("Descrição do item:") 
     # Verifica se o código já está cadastrado.
+   
     while True:
             codigo = input("Código do item:")
             codigo_existe = False
+
             for produto in produtos_estoque:
                 if produto["id"] == codigo:
                     codigo_existe =  True
-            if codigo_existe == True:
+
+            if codigo_existe:
                 print("Esse código já está cadastrado.")
             else:
                 break
+
     #Filtra para a quantidade só aceitar números positivos, não aceita negativos, ou por extenso (ex: "cinco").            
     while True: 
         try:
@@ -42,6 +46,22 @@ def cadastrar_produtos():
     produto_cadastrado = {"nome": descricao_produto, "id": codigo, "quantidade": quantidade}
     produtos_estoque.append(produto_cadastrado)
 
+def buscar_produto():
+    encontrado = False
+    codigo = input("Digite o código para busca: ")
+
+    for produto in produtos_estoque:
+        if produto["id"] == codigo:
+            encontrado = True
+            print("Código encontrado!")
+            print("Descrição: ", produto["nome"])
+            print("Quantidade: ", produto["quantidade"])
+            break
+
+    if not encontrado:
+        print("Não encontrado")
+
+
 def listar_produtos():
     for produto in produtos_estoque:
         print(f"Descrição: {produto['nome']}")
@@ -52,7 +72,8 @@ while True:
     print("="*3, "CONTROLE DE ESTOQUE", "="*3)
     print("\n1. Cadastrar produto")
     print("2. Listar produtos")
-    print("3. Sair\n")
+    print("3. Procurar produto")
+    print("4. Sair\n")
     print("="*28)
     acao = input("Escolha uma opção: ")
 
@@ -61,6 +82,8 @@ while True:
     elif acao == "2":
         listar_produtos()
     elif acao == "3":
+        buscar_produto()
+    elif acao == "4":
         salvar_estoque()
         print("Salvando os produtos")
         time.sleep(5)
