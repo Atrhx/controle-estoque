@@ -5,7 +5,12 @@ produtos_estoque = []
 def cadastrar_produtos():
     descricao_produto = input("Descrição do item:")
     codigo = input("Código do item:")
-    quantidade = int(input("Quantidade:"))
+    while True:
+        try:
+            quantidade = int(input("Quantidade:"))
+            break
+        except ValueError:
+            print("Quantidade inválida! Digite apenas números.")
     produto_cadastrado = {"nome": descricao_produto, "id": codigo, "quantidade": quantidade}
     produtos_estoque.append(produto_cadastrado)
 
