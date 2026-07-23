@@ -8,7 +8,10 @@ def cadastrar_produtos():
     while True:
         try:
             quantidade = int(input("Quantidade:"))
-            break
+            if quantidade < 0:
+                print("Quantidade não pode ser negativa!")
+            else: 
+                break
         except ValueError:
             print("Quantidade inválida! Digite apenas números.")
     produto_cadastrado = {"nome": descricao_produto, "id": codigo, "quantidade": quantidade}
