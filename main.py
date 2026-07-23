@@ -3,3 +3,6 @@ print("\n1. Cadastrar produto")
 print("2. Listar produtos")
 print("3. Sair\n")
 print("="*28)
+
+acao = input("Escolha uma opção: ")
+print(f"Você escolheu: {acao}")
