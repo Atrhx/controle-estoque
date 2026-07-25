@@ -5,31 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de Estoque</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <main>
-        <h1>Controle de Estoque</h1>
 
-        <section>
-            <h2>Cadastrar produto</h2>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <span>📦</span>
+            <h2>Estoque</h2>
+        </div>
 
-            <form action="/cadastrar" method="POST"">
-                <label for="nome">Produto</label>
-                <input type="text" id="nome" name="nome">
+        <nav>
+            <a href="#" class="menu-ativo">🏠 Início</a>
+            <a href="#">📋 Produtos</a>
+            <a href="#">⚠️ Estoque baixo</a>
+            <a href="#">📊 Relatórios</a>
+        </nav>
+    </aside>
 
-                <label for="codigo">Código</label>
-                <input type="text" id="codigo" name="codigo">
 
-                <label for="quantidade">Quantidade</label>
-                <input type="number" id="quantidade" name="quantidade">
+    <main class="conteudo">
 
-                <button type="submit">Cadastrar</button>
-            </form>
+        <header class="cabecalho">
+            <div>
+                <h1>📦 Controle de Estoque</h1>
+                <p>Gestão dos produtos cadastrados</p>
+            </div>
+        </header>
+
+
+        <section class="acoes">
+            <input
+                type="search"
+                placeholder="Buscar produto..."
+            >
+
+            <select>
+                <option>Todos os produtos</option>
+                <option>Em estoque</option>
+                <option>Estoque baixo</option>
+                <option>Sem estoque</option>
+            </select>
+
+            <button type="button" class="botao-novo" id="abrirModal">
+                + Novo produto
+            </button>
         </section>
 
-        <section>
-            <h2>Produtos cadastrados</h2>
+
+        <section class="tabela-container">
 
             <table>
                 <thead>
@@ -37,25 +61,109 @@
                         <th>Código</th>
                         <th>Produto</th>
                         <th>Quantidade</th>
+                        <th>Status</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
 
                 <tbody>
+
                     {% for produto in produtos %}
-                        <tr>
-                            <td>{{ produto["id"]}}</td>
-                            <td>{{ produto["nome"]}}</td>
-                            <td>{{ produto["quantidade"]}}</td>
-                            <td>
-                                <button>Editar</button>
-                                <button>Remover</button>
-                            </td>
-                        </tr>
+
+                    <tr>
+                        <td>{{ produto["id"] }}</td>
+
+                        <td>{{ produto["nome"] }}</td>
+
+                        <td>{{ produto["quantidade"] }}</td>
+
+                        <td>
+                            {% if produto["quantidade"] == 0 %}
+                                <span class="status sem-estoque">
+                                    Sem estoque
+                                </span>
+
+                            {% elif produto["quantidade"] < 10 %}
+                                <span class="status baixo">
+                                    Estoque baixo
+                                </span>
+
+                            {% else %}
+                                <span class="status normal">
+                                    Em estoque
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <button type="button" class="botao-editar">
+                                Editar
+                            </button>
+
+                            <form
+                                action = "{{ url_for('remover', codigo=produto['id']) }}"
+                                method = "POST"
+                                class = "form-remover"
+                            >
+                                <button type="submit" class="botao-remover">
+                                    Remover
+                                </button>
+                        </form>
+                    </tr>
+
                     {% endfor %}
+
                 </tbody>
             </table>
+
         </section>
+
     </main>
+    <div class="modal" id="modalCadastro">
+        <div class="modal-conteudo">
+
+            <div class="modal-cabecalho">
+                <h2>Novo produto</h2>
+                <button type="button" id="fecharModal">×</button>
+            </div>
+
+            <form action="{{ url_for('cadastrar') }}" method="POST">
+
+                <label for="nome">Produto</label>
+                <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    required
+                >
+                    
+
+                <label for="codigo">Código</label>
+                <input
+                    type="text"
+                    id="codigo"
+                    name="codigo"
+                    maxlength="6"
+                    required
+                >
+
+                <label for="quantidade">Quantidade</label>
+                <input
+                    type="number"
+                    id="quantidade"
+                    name="quantidade"
+                    min="0"
+                    required
+                >
+
+                <button type="submit" class="botao-salvar">
+                    Cadastrar produto
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

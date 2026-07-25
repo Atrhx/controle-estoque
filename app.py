@@ -23,7 +23,9 @@ def inicio():
 @app.route("/cadastrar", methods=["POST"])
 def cadastrar():
     nome = request.form["nome"]
-    codigo = request.form["codigo"]
+    codigo = request.form["codigo"].strip().upper()
+    if len(codigo) > 6:
+        return redirect("/")
     quantidade = request.form["quantidade"]
     quantidade = int(quantidade)
     produtos = carregar_estoque()
@@ -39,6 +41,18 @@ def cadastrar():
 def salvar_estoque(produtos): #agora a função recebe a lista que queremos salvar
     with open("estoque.json", "w", encoding="utf-8") as arquivo:
         json.dump(produtos, arquivo, indent=4, ensure_ascii=False)
+
+@app.route("/remover/<codigo>", methods=["POST"])
+def remover(codigo):
+    produtos = carregar_estoque()
+
+    for produto in produtos:
+        if produto["id"] == codigo:
+            produtos.remove(produto)
+            salvar_estoque(produtos)
+            break
+
+    return redirect("/")                                        
 
 if __name__ == "__main__":
     app.run(debug=True)
