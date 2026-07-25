@@ -68,12 +68,47 @@ def listar_produtos():
         print(f"ID: {produto['id']}")
         print(f"Quantidade: {produto['quantidade']}")
 
+def atualizar_quantidade():
+    encontrado = False
+    codigo = input("Qual produto deseja atualizar a quantidade? (Inserir o código) ")
+    for produto in produtos_estoque:
+        if produto['id'] == codigo:
+            encontrado = True
+            print("Descrição: ", produto["nome"])
+            print("Quantidade: ", produto["quantidade"])
+
+            print("Você deseja: ")
+            print("1. Atualizar quantidade")
+            print("2. Sair")
+            acao = input("Opção: ")
+            if acao == "1":
+                while True:
+                    try:
+                        nova_quantidade = int(input("Nova quantidade: "))
+                        if nova_quantidade < 0:
+                            print("Quantidade não pode ser negativa!")
+                        else:
+                            print("Salvando novo valor...")
+                            produto["quantidade"] = nova_quantidade
+                            print("Saindo...")
+                            break
+                    except ValueError:
+                        print("Quantidade precisa ser um número válido!")
+                break  
+            elif acao == "2":
+                break
+            else:
+                print("Ação inválida!")
+    if not encontrado:
+        print("Não encontrado")
+
 while True:
     print("="*3, "CONTROLE DE ESTOQUE", "="*3)
     print("\n1. Cadastrar produto")
     print("2. Listar produtos")
     print("3. Procurar produto")
-    print("4. Sair\n")
+    print("4. Atualizar quantidade")
+    print("5. Sair\n")
     print("="*28)
     acao = input("Escolha uma opção: ")
 
@@ -84,6 +119,8 @@ while True:
     elif acao == "3":
         buscar_produto()
     elif acao == "4":
+        atualizar_quantidade()    
+    elif acao == "5":
         salvar_estoque()
         print("Salvando os produtos")
         time.sleep(5)
