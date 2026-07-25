@@ -102,13 +102,44 @@ def atualizar_quantidade():
     if not encontrado:
         print("Não encontrado")
 
+def remover_produto():
+    encontrado = False
+    codigo = input("Qual produto deseja remover? (Inserir o código) ")
+
+    for produto in produtos_estoque:
+        if produto["id"] == codigo:
+            encontrado = True
+
+            print(f"Descrição: {produto['nome']}")
+            print(f"Quantidade: {produto['quantidade']}")
+
+            while True:
+                acao = input("Deseja remover esse produto? (S/N) ").lower()
+
+                if acao == "s":
+                    produtos_estoque.remove(produto)
+                    print("Produto removido com sucesso!")
+                    break
+
+                elif acao == "n":
+                    print("Remoção cancelada.")
+                    break
+
+                else:
+                    print("Ação inválida.")
+
+            break
+
+    if not encontrado:
+        print("Produto não encontrado.")
 while True:
     print("="*3, "CONTROLE DE ESTOQUE", "="*3)
     print("\n1. Cadastrar produto")
     print("2. Listar produtos")
     print("3. Procurar produto")
     print("4. Atualizar quantidade")
-    print("5. Sair\n")
+    print("5. Remover produto")
+    print("6. Sair\n")
     print("="*28)
     acao = input("Escolha uma opção: ")
 
@@ -121,6 +152,8 @@ while True:
     elif acao == "4":
         atualizar_quantidade()    
     elif acao == "5":
+        remover_produto()
+    elif acao == "6":
         salvar_estoque()
         print("Salvando os produtos")
         time.sleep(5)
