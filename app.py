@@ -1,10 +1,11 @@
 import json
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, flash
 #Flask cria a aplicação web;
 #render_template permite carregar arquivos HTML
 
 #cria a aplicação
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "dev"
 
 def carregar_estoque():
     try:
@@ -25,10 +26,22 @@ def cadastrar():
     nome = request.form["nome"]
     codigo = request.form["codigo"].strip().upper()
     if len(codigo) > 6:
+        flash("O código deve ter no máximo 6 caracteres.", "erro")
         return redirect("/")
-    quantidade = request.form["quantidade"]
-    quantidade = int(quantidade)
+    try:
+        quantidade = int(request.form["quantidade"])
+        if quantidade < 0:
+            flash("A quantidade não pode ser negativa", "erro")
+            return redirect("/")
+    except ValueError:
+        flash("Digite uma quantidade válida!", "erro")
+        return redirect("/")
+
     produtos = carregar_estoque()
+    for produto in produtos:
+        if produto["id"] == codigo:
+            flash(f"O código {codigo} já está cadastrado.", "erro")
+            return redirect("/")
     produto = {
         "nome": nome,
         "id": codigo,
@@ -36,6 +49,7 @@ def cadastrar():
     }
     produtos.append(produto)
     salvar_estoque(produtos)
+    flash("Produto cadastrado com sucesso!", "sucesso")
     return redirect("/")
 
 def salvar_estoque(produtos): #agora a função recebe a lista que queremos salvar
