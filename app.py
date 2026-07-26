@@ -66,7 +66,47 @@ def remover(codigo):
             salvar_estoque(produtos)
             break
 
-    return redirect("/")                                        
+    return redirect("/")
+
+@app.route("/editar/<codigo_original>", methods=["POST"])
+def editar(codigo_original):
+    nome = request.form["nome"].strip()
+    novo_codigo = request.form["codigo"].strip().upper()
+
+    try:
+        quantidade = int(request.form["quantidade"])
+
+        if quantidade < 0:
+            flash("A quantidade não pode ser negativa.", "erro")
+            return redirect("/")
+
+    except ValueError:
+        flash("Digite uma quantidade válida.", "erro")
+        return redirect("/")
+
+    if len(novo_codigo) > 6:
+        flash("O código deve ter no máximo 6 caracteres.", "erro")
+        return redirect("/")
+
+    produtos = carregar_estoque()
+
+    for produto in produtos:
+        if produto["id"] == novo_codigo and produto["id"] != codigo_original:
+            flash(f"O código {novo_codigo} já está cadastrado.", "erro")
+            return redirect("/")
+    for produto in produtos:
+        if produto["id"] == codigo_original:
+            produto["nome"] = nome
+            produto["id"] = novo_codigo
+            produto["quantidade"] = quantidade
+
+            salvar_estoque(produtos)
+
+            flash("Produto atualizado com sucesso!", "sucesso")
+            return redirect("/")
+        
+    flash("Produto não encontrado.", "erro")
+    return redirect("/")   
 
 if __name__ == "__main__":
     app.run(debug=True)
